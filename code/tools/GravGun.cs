@@ -1,5 +1,4 @@
 ﻿using Sandbox;
-using Sandbox.Joints;
 using System;
 using System.Linq;
 
@@ -9,8 +8,7 @@ public partial class GravGun : Carriable
 	public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
 
 	private PhysicsBody holdBody;
-	private WeldJoint holdJoint;
-	private GenericJoint collisionJoint;
+	private FixedJoint holdJoint;
 
 	public PhysicsBody HeldBody { get; private set; }
 	public Rotation HeldRot { get; private set; }
@@ -57,7 +55,7 @@ public partial class GravGun : Carriable
 
 			if ( HeldBody.IsValid() && HeldBody.PhysicsGroup != null )
 			{
-				if ( holdJoint.IsValid && !holdJoint.IsActive )
+				if ( holdJoint.IsValid() && !holdJoint.IsActive )
 				{
 					GrabEnd();
 				}
@@ -151,7 +149,7 @@ public partial class GravGun : Carriable
 	{
 		if ( !holdBody.IsValid() )
 		{
-			holdBody = new PhysicsBody
+			holdBody = new PhysicsBody( Global.PhysicsWorld )
 			{
 				BodyType = PhysicsBodyType.Keyframed
 			};
@@ -231,18 +229,10 @@ public partial class GravGun : Carriable
 		HeldBody.Wake();
 		HeldBody.EnableAutoSleeping = false;
 
-		collisionJoint = PhysicsJoint.Generic
-			.From( (Owner as Player).PhysicsBody )
-			.To( HeldBody )
-			.Create();
-
-		holdJoint = PhysicsJoint.Weld
-			.From( holdBody )
-			.To( HeldBody, HeldBody.LocalMassCenter )
-			.WithLinearSpring( LinearFrequency, LinearDampingRatio, 0.0f )
-			.WithAngularSpring( AngularFrequency, AngularDampingRatio, 0.0f )
-			.Breakable( HeldBody.Mass * BreakLinearForce, 0 )
-			.Create();
+		holdJoint = PhysicsJoint.CreateFixed( holdBody, PhysicsAttachment.Local( HeldBody, HeldBody.LocalMassCenter ) );
+		holdJoint.SpringLinear = new( LinearFrequency, LinearDampingRatio );
+		holdJoint.SpringAngular = new( AngularFrequency, AngularDampingRatio );
+		//	.Breakable( HeldBody.Mass * BreakLinearForce, 0 )
 
 		HeldEntity = entity;
 
@@ -251,15 +241,8 @@ public partial class GravGun : Carriable
 
 	private void GrabEnd()
 	{
-		if ( holdJoint.IsValid )
-		{
-			holdJoint.Remove();
-		}
-
-		if ( collisionJoint.IsValid )
-		{
-			collisionJoint.Remove();
-		}
+		holdJoint?.Remove();
+		holdJoint = null;
 
 		if ( HeldBody.IsValid() )
 		{

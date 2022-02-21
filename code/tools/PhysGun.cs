@@ -1,5 +1,4 @@
 using Sandbox;
-using Sandbox.Joints;
 using System;
 using System.Linq;
 
@@ -10,8 +9,8 @@ public partial class PhysGun : Carriable
 
 	protected PhysicsBody holdBody;
 	protected PhysicsBody velBody;
-	protected WeldJoint holdJoint;
-	protected WeldJoint velJoint;
+	protected FixedJoint holdJoint;
+	protected FixedJoint velJoint;
 
 	protected PhysicsBody heldBody;
 	protected Vector3 heldPos;
@@ -229,35 +228,11 @@ public partial class PhysGun : Carriable
 
 		if ( rotating )
 		{
-			EnableAngularSpring( Input.Down( InputButton.Run ) ? 100.0f : 0.0f );
 			DoRotate( eyeRot, Input.MouseDelta * RotateSpeed );
-
 			snapping = Input.Down( InputButton.Run );
-		}
-		else
-		{
-			DisableAngularSpring();
 		}
 
 		GrabMove( eyePos, eyeDir, eyeRot, snapping );
-	}
-
-	private void EnableAngularSpring( float scale )
-	{
-		if ( holdJoint.IsValid )
-		{
-			holdJoint.AngularDampingRatio = AngularDampingRatio * scale;
-			holdJoint.AngularFrequency = AngularFrequency * scale;
-		}
-	}
-
-	private void DisableAngularSpring()
-	{
-		if ( holdJoint.IsValid )
-		{
-			holdJoint.AngularDampingRatio = 0.0f;
-			holdJoint.AngularFrequency = 0.0f;
-		}
 	}
 
 	private void Activate()
@@ -267,7 +242,7 @@ public partial class PhysGun : Carriable
 
 		if ( !holdBody.IsValid() )
 		{
-			holdBody = new PhysicsBody
+			holdBody = new PhysicsBody( Global.PhysicsWorld )
 			{
 				BodyType = PhysicsBodyType.Keyframed
 			};
@@ -275,7 +250,7 @@ public partial class PhysGun : Carriable
 
 		if ( !velBody.IsValid() )
 		{
-			velBody = new PhysicsBody
+			velBody = new PhysicsBody( Global.PhysicsWorld )
 			{
 				BodyType = PhysicsBodyType.Dynamic,
 				EnableAutoSleeping = false
@@ -335,7 +310,7 @@ public partial class PhysGun : Carriable
 		heldBody = body;
 		holdDistance = Vector3.DistanceBetween( startPos, grabPos );
 		holdDistance = holdDistance.Clamp( MinTargetDistance, MaxTargetDistance );
-		heldPos = heldBody.Transform.PointToLocal( grabPos );
+
 		heldRot = rot.Inverse * heldBody.Rotation;
 
 		holdBody.Position = grabPos;
@@ -347,32 +322,23 @@ public partial class PhysGun : Carriable
 		heldBody.Wake();
 		heldBody.EnableAutoSleeping = false;
 
-		holdJoint = PhysicsJoint.Weld
-			.From( holdBody )
-			.To( heldBody, heldPos )
-			.WithLinearSpring( LinearFrequency, LinearDampingRatio, 0.0f )
-			.WithAngularSpring( 0.0f, 0.0f, 0.0f )
-			.Create();
+		holdJoint = PhysicsJoint.CreateFixed( holdBody, PhysicsAttachment.World( heldBody, grabPos ) );
+		holdJoint.SpringLinear = new PhysicsSpring( LinearFrequency, LinearDampingRatio );
+		holdJoint.SpringAngular = new PhysicsSpring( AngularFrequency, AngularDampingRatio );
 
-		velJoint = PhysicsJoint.Weld
-			.From( holdBody )
-			.To( velBody )
-			.WithLinearSpring( LinearFrequency, LinearDampingRatio, 0.0f )
-			.WithAngularSpring( 0.0f, 0.0f, 0.0f )
-			.Create();
+		velJoint = PhysicsJoint.CreateFixed( holdBody, velBody );
+		velJoint.SpringLinear = new PhysicsSpring( LinearFrequency, LinearDampingRatio );
+		velJoint.SpringAngular = new PhysicsSpring( AngularFrequency, AngularDampingRatio );
+
 	}
 
 	private void GrabEnd()
 	{
-		if ( holdJoint.IsValid )
-		{
-			holdJoint.Remove();
-		}
+		holdJoint?.Remove();
+		holdJoint = null;
 
-		if ( velJoint.IsValid )
-		{
-			velJoint.Remove();
-		}
+		velJoint?.Remove();
+		velJoint = null;
 
 		if ( heldBody.IsValid() )
 		{
