@@ -74,7 +74,7 @@
 					rope.SetEntityBone( 1, tr.Body.GetEntity(), tr.Bone, new Transform( localOrigin2 * (1.0f / tr.Entity.Scale) ) );
 				}
 
-				var spring = PhysicsJoint.CreateLength( PhysicsAttachment.Local( targetBody, localOrigin1 ), PhysicsAttachment.Local( tr.Body, localOrigin2 ), tr.EndPos.Distance( globalOrigin1 ) );
+				var spring = PhysicsJoint.CreateLength( targetBody.LocalPoint( localOrigin1 ), tr.Body.LocalPoint( localOrigin2 ), tr.EndPos.Distance( globalOrigin1 ) );
 				spring.SpringLinear = new( 5, 0.7f );
 				spring.Collisions = true;
 				spring.EnableAngularConstraint = false;

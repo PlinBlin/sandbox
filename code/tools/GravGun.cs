@@ -229,7 +229,7 @@ public partial class GravGun : Carriable
 		HeldBody.Wake();
 		HeldBody.EnableAutoSleeping = false;
 
-		holdJoint = PhysicsJoint.CreateFixed( holdBody, PhysicsAttachment.Local( HeldBody, HeldBody.LocalMassCenter ) );
+		holdJoint = PhysicsJoint.CreateFixed( holdBody, HeldBody.MassCenterPoint() );
 		holdJoint.SpringLinear = new( LinearFrequency, LinearDampingRatio );
 		holdJoint.SpringAngular = new( AngularFrequency, AngularDampingRatio );
 		holdJoint.Strength = HeldBody.Mass * BreakLinearForce;

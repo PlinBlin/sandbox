@@ -322,7 +322,7 @@ public partial class PhysGun : Carriable
 		heldBody.Wake();
 		heldBody.EnableAutoSleeping = false;
 
-		holdJoint = PhysicsJoint.CreateFixed( holdBody, PhysicsAttachment.World( heldBody, grabPos ) );
+		holdJoint = PhysicsJoint.CreateFixed( holdBody, heldBody.WorldPoint( grabPos ) );
 		holdJoint.SpringLinear = new PhysicsSpring( LinearFrequency, LinearDampingRatio );
 		holdJoint.SpringAngular = new PhysicsSpring( AngularFrequency, AngularDampingRatio );
 

@@ -100,7 +100,7 @@
 					rope.SetEntityBone( 1, attachEnt, tr.Bone, new Transform( attachLocalPos ) );
 				}
 
-				var spring = PhysicsJoint.CreateLength( ent.PhysicsBody, PhysicsAttachment.World( tr.Body, tr.EndPos ), 100 );
+				var spring = PhysicsJoint.CreateLength( ent.PhysicsBody, PhysicsPoint.World( tr.Body, tr.EndPos ), 100 );
 				spring.SpringLinear = new( 5, 0.7f );
 				spring.Collisions = true;
 				spring.EnableAngularConstraint = false;
