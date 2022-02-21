@@ -149,7 +149,7 @@ public partial class GravGun : Carriable
 	{
 		if ( !holdBody.IsValid() )
 		{
-			holdBody = new PhysicsBody( Global.PhysicsWorld )
+			holdBody = new PhysicsBody( Map.Physics )
 			{
 				BodyType = PhysicsBodyType.Keyframed
 			};
@@ -232,7 +232,7 @@ public partial class GravGun : Carriable
 		holdJoint = PhysicsJoint.CreateFixed( holdBody, PhysicsAttachment.Local( HeldBody, HeldBody.LocalMassCenter ) );
 		holdJoint.SpringLinear = new( LinearFrequency, LinearDampingRatio );
 		holdJoint.SpringAngular = new( AngularFrequency, AngularDampingRatio );
-		//	.Breakable( HeldBody.Mass * BreakLinearForce, 0 )
+		holdJoint.Strength = HeldBody.Mass * BreakLinearForce;
 
 		HeldEntity = entity;
 

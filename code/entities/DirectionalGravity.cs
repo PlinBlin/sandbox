@@ -32,7 +32,7 @@ public partial class DirectionalGravity : Prop
 	{
 		base.OnDestroy();
 
-		Global.PhysicsWorld.Gravity = Vector3.Down * 800.0f;
+		Map.Physics.Gravity = Vector3.Down * 800.0f;
 
 		enabled = false;
 	}
@@ -49,6 +49,6 @@ public partial class DirectionalGravity : Prop
 		if ( !this.IsValid() )
 			return;
 
-		Global.PhysicsWorld.Gravity = Rotation.Down * 800.0f;
+		Map.Physics.Gravity = Rotation.Down * 800.0f;
 	}
 }

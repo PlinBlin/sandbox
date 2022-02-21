@@ -277,7 +277,7 @@ public partial class CarEntity : Prop, IUse
 
 		if ( fullyGrounded )
 		{
-			body.Velocity += Global.PhysicsWorld.Gravity * dt;
+			body.Velocity += Map.Physics.Gravity * dt;
 		}
 
 		body.GravityScale = fullyGrounded ? 0 : 1;

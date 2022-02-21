@@ -242,7 +242,7 @@ public partial class PhysGun : Carriable
 
 		if ( !holdBody.IsValid() )
 		{
-			holdBody = new PhysicsBody( Global.PhysicsWorld )
+			holdBody = new PhysicsBody( Map.Physics )
 			{
 				BodyType = PhysicsBodyType.Keyframed
 			};
@@ -250,7 +250,7 @@ public partial class PhysGun : Carriable
 
 		if ( !velBody.IsValid() )
 		{
-			velBody = new PhysicsBody( Global.PhysicsWorld )
+			velBody = new PhysicsBody( Map.Physics )
 			{
 				BodyType = PhysicsBodyType.Dynamic,
 				EnableAutoSleeping = false

@@ -98,11 +98,11 @@
 				spring.SpringLinear = new( 5, 0.7f );
 				spring.Collisions = true;
 				spring.EnableAngularConstraint = false;
-				spring.OnBreak( () =>
+				spring.OnBreak += () =>
 				{
 					rope?.Destroy( true );
 					spring.Remove();
-				} );
+				};
 			}
 		}
 	}
