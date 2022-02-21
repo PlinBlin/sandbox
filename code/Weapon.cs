@@ -27,7 +27,7 @@ public partial class Weapon : BaseWeapon, IUse
 			EnableSelfCollisions = false
 		};
 
-		PickupTrigger.PhysicsBody.EnableAutoSleeping = false;
+		PickupTrigger.PhysicsBody.AutoSleep = false;
 	}
 
 	public override void ActiveStart( Entity ent )
@@ -123,7 +123,6 @@ public partial class Weapon : BaseWeapon, IUse
 
 	public void Remove()
 	{
-		PhysicsGroup?.Wake();
 		Delete();
 	}
 

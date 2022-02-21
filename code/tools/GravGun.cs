@@ -226,8 +226,8 @@ public partial class GravGun : Carriable
 		holdBody.Position = grabPos;
 		holdBody.Rotation = HeldBody.Rotation;
 
-		HeldBody.Wake();
-		HeldBody.EnableAutoSleeping = false;
+		HeldBody.Sleeping = false;
+		HeldBody.AutoSleep = false;
 
 		holdJoint = PhysicsJoint.CreateFixed( holdBody, HeldBody.MassCenterPoint() );
 		holdJoint.SpringLinear = new( LinearFrequency, LinearDampingRatio );
@@ -246,7 +246,7 @@ public partial class GravGun : Carriable
 
 		if ( HeldBody.IsValid() )
 		{
-			HeldBody.EnableAutoSleeping = true;
+			HeldBody.AutoSleep = true;
 		}
 
 		if ( HeldEntity.IsValid() )

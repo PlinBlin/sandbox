@@ -197,7 +197,7 @@ public partial class PhysGun : Carriable
 
 		GrabbedEntity = rootEnt;
 		GrabbedPos = body.Transform.PointToLocal( tr.EndPos );
-		GrabbedBone = tr.Entity.PhysicsGroup.GetBodyIndex( body );
+		GrabbedBone = body.GroupIndex;
 
 		Client?.Pvs.Add( GrabbedEntity );
 	}
@@ -253,7 +253,7 @@ public partial class PhysGun : Carriable
 			velBody = new PhysicsBody( Map.Physics )
 			{
 				BodyType = PhysicsBodyType.Dynamic,
-				EnableAutoSleeping = false
+				AutoSleep = false
 			};
 		}
 	}
@@ -319,8 +319,8 @@ public partial class PhysGun : Carriable
 		velBody.Position = grabPos;
 		velBody.Rotation = heldBody.Rotation;
 
-		heldBody.Wake();
-		heldBody.EnableAutoSleeping = false;
+		heldBody.Sleeping = false;
+		heldBody.AutoSleep = false;
 
 		holdJoint = PhysicsJoint.CreateFixed( holdBody, heldBody.WorldPoint( grabPos ) );
 		holdJoint.SpringLinear = new PhysicsSpring( LinearFrequency, LinearDampingRatio );
@@ -342,7 +342,7 @@ public partial class PhysGun : Carriable
 
 		if ( heldBody.IsValid() )
 		{
-			heldBody.EnableAutoSleeping = true;
+			heldBody.AutoSleep = true;
 		}
 
 		Client?.Pvs.Remove( GrabbedEntity );

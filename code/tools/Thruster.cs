@@ -79,7 +79,7 @@
 
 				if ( attached )
 				{
-					ent.SetParent( tr.Body.GetEntity(), tr.Body.PhysicsGroup.GetBodyBoneName( tr.Body ) );
+					ent.SetParent( tr.Body.GetEntity(), tr.Body.GroupName );
 				}
 
 				ent.SetModel( "models/thruster/thrusterprojector.vmdl" );
