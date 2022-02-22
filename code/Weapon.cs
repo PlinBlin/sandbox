@@ -45,7 +45,7 @@ public partial class Weapon : BaseWeapon, IUse
 		TimeSinceReload = 0;
 		IsReloading = true;
 
-		(Owner as AnimEntity)?.SetAnimBool( "b_reload", true );
+		(Owner as AnimEntity)?.SetAnimParameter( "b_reload", true );
 
 		StartReloadEffects();
 	}
@@ -74,7 +74,7 @@ public partial class Weapon : BaseWeapon, IUse
 	[ClientRpc]
 	public virtual void StartReloadEffects()
 	{
-		ViewModelEntity?.SetAnimBool( "reload", true );
+		ViewModelEntity?.SetAnimParameter( "reload", true );
 
 		// TODO - player third person model reload
 	}
@@ -139,7 +139,7 @@ public partial class Weapon : BaseWeapon, IUse
 			_ = new Sandbox.ScreenShake.Perlin();
 		}
 
-		ViewModelEntity?.SetAnimBool( "fire", true );
+		ViewModelEntity?.SetAnimParameter( "fire", true );
 		CrosshairPanel?.CreateEvent( "fire" );
 	}
 

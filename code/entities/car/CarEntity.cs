@@ -227,17 +227,17 @@ public partial class CarEntity : Prop, IUse
 		//driver.Simulate( client );
 		//Driver.ActiveChild?.Simulate( client );
 
-		Driver.SetAnimBool( "b_grounded", true );
-		Driver.SetAnimBool( "b_sit", true );
+		Driver.SetAnimParameter( "b_grounded", true );
+		Driver.SetAnimParameter( "b_sit", true );
 
 		var aimRotation = Input.Rotation.Clamp( Driver.Rotation, 90 );
 
 		var aimPos = Driver.EyePosition + aimRotation.Forward * 200;
 		var localPos = new Transform( Driver.EyePosition, Driver.Rotation ).PointToLocal( aimPos );
 
-		Driver.SetAnimVector( "aim_eyes", localPos );
-		Driver.SetAnimVector( "aim_head", localPos );
-		Driver.SetAnimVector( "aim_body", localPos );
+		Driver.SetAnimParameter( "aim_eyes", localPos );
+		Driver.SetAnimParameter( "aim_head", localPos );
+		Driver.SetAnimParameter( "aim_body", localPos );
 
 		if ( Driver.ActiveChild is BaseCarriable carry )
 		{
@@ -245,8 +245,8 @@ public partial class CarEntity : Prop, IUse
 		}
 		else
 		{
-			Driver.SetAnimInt( "holdtype", 0 );
-			Driver.SetAnimFloat( "aim_body_weight", 0.5f );
+			Driver.SetAnimParameter( "holdtype", 0 );
+			Driver.SetAnimParameter( "aim_body_weight", 0.5f );
 		}
 	}
 

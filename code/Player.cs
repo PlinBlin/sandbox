@@ -134,8 +134,6 @@ partial class SandboxPlayer : Player
 
 		if ( Input.Pressed( InputButton.View ) )
 		{
-			Log.Info( "VIEW" );
-
 			if ( CameraMode is ThirdPersonCamera )
 			{
 				CameraMode = new FirstPersonCamera();
