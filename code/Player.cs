@@ -7,10 +7,6 @@ partial class SandboxPlayer : Player
 
 	private DamageInfo lastDamage;
 
-	[Net] public PawnController VehicleController { get; set; }
-	[Net] public PawnAnimator VehicleAnimator { get; set; }
-	[Net, Predicted] public Entity Vehicle { get; set; }
-
 	/// <summary>
 	/// The clothing container is what dresses the citizen
 	/// </summary>
@@ -75,10 +71,6 @@ partial class SandboxPlayer : Player
 			PlaySound( "kersplat" );
 		}
 
-		VehicleController = null;
-		VehicleAnimator = null;
-		Vehicle = null;
-
 		BecomeRagdollOnClient( Velocity, lastDamage.Flags, lastDamage.Position, lastDamage.Force, GetHitboxBone( lastDamage.HitboxIndex ) );
 
 		Controller = null;
@@ -116,17 +108,9 @@ partial class SandboxPlayer : Player
 
 	public override PawnController GetActiveController()
 	{
-		if ( VehicleController != null ) return VehicleController;
 		if ( DevController != null ) return DevController;
 
 		return base.GetActiveController();
-	}
-
-	public override PawnAnimator GetActiveAnimator()
-	{
-		if ( VehicleAnimator != null ) return VehicleAnimator;
-
-		return base.GetActiveAnimator();
 	}
 
 	public override void Simulate( Client cl )
@@ -141,11 +125,6 @@ partial class SandboxPlayer : Player
 		if ( LifeState != LifeState.Alive )
 			return;
 
-		if ( VehicleController != null && DevController is NoclipController )
-		{
-			DevController = null;
-		}
-
 		var controller = GetActiveController();
 		if ( controller != null )
 			EnableSolidCollisions = !controller.HasTag( "noclip" );
@@ -155,6 +134,8 @@ partial class SandboxPlayer : Player
 
 		if ( Input.Pressed( InputButton.View ) )
 		{
+			Log.Info( "VIEW" );
+
 			if ( CameraMode is ThirdPersonCamera )
 			{
 				CameraMode = new FirstPersonCamera();
@@ -225,14 +206,4 @@ partial class SandboxPlayer : Player
 		}
 	}
 
-	// TODO
-
-	//public override bool HasPermission( string mode )
-	//{
-	//	if ( mode == "noclip" ) return true;
-	//	if ( mode == "devcam" ) return true;
-	//	if ( mode == "suicide" ) return true;
-	//
-	//	return base.HasPermission( mode );
-	//	}
 }
