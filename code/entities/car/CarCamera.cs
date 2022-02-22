@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System;
 
-public class CarCamera : Camera
+public class CarCamera : CameraMode
 {
 	protected virtual float MinFov => 80.0f;
 	protected virtual float MaxFov => 100.0f;

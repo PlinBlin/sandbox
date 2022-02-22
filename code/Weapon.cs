@@ -111,9 +111,10 @@ public partial class Weapon : BaseWeapon, IUse
 
 	public virtual bool IsUsable( Entity user )
 	{
+		var player = user as Player;
 		if ( Owner != null ) return false;
 
-		if ( user.Inventory is Inventory inventory )
+		if ( player.Inventory is Inventory inventory )
 		{
 			return inventory.CanAdd( this );
 		}

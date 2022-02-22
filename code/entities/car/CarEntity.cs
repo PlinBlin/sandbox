@@ -460,7 +460,6 @@ public partial class CarEntity : Prop, IUse
 		player.Vehicle = null;
 		player.VehicleController = null;
 		player.VehicleAnimator = null;
-		player.VehicleCamera = null;
 		player.Parent = null;
 
 		if ( player.PhysicsBody.IsValid() )
@@ -477,7 +476,6 @@ public partial class CarEntity : Prop, IUse
 			player.Vehicle = this;
 			player.VehicleController = new CarController();
 			player.VehicleAnimator = new CarAnimator();
-			player.VehicleCamera = new CarCamera();
 			player.Parent = this;
 			player.LocalPosition = Vector3.Up * 10;
 			player.LocalRotation = Rotation.Identity;
@@ -520,7 +518,7 @@ public partial class CarEntity : Prop, IUse
 			OnPhysicsCollision( new CollisionEventData
 			{
 				Entity = player,
-				Pos = player.Position + Vector3.Up * 50,
+				Position = player.Position + Vector3.Up * 50,
 				Velocity = velocity,
 				PreVelocity = velocity,
 				PostVelocity = velocity,
@@ -559,7 +557,7 @@ public partial class CarEntity : Prop, IUse
 					.WithFlag( DamageFlags.PhysicsImpact )
 					.WithFlag( DamageFlags.Vehicle )
 					.WithAttacker( driver != null ? driver : this, driver != null ? this : null )
-					.WithPosition( eventData.Pos )
+					.WithPosition( eventData.Position )
 					.WithForce( eventData.PreVelocity ) );
 
 				if ( eventData.Entity.LifeState == LifeState.Dead && eventData.Entity is not SandboxPlayer )

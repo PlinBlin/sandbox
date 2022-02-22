@@ -9,12 +9,7 @@ partial class SandboxPlayer : Player
 
 	[Net] public PawnController VehicleController { get; set; }
 	[Net] public PawnAnimator VehicleAnimator { get; set; }
-	[Net, Predicted] public ICamera VehicleCamera { get; set; }
 	[Net, Predicted] public Entity Vehicle { get; set; }
-	[Net, Predicted] public ICamera MainCamera { get; set; }
-
-	public ICamera LastCamera { get; set; }
-
 
 	/// <summary>
 	/// The clothing container is what dresses the citizen
@@ -38,23 +33,12 @@ partial class SandboxPlayer : Player
 		Clothing.LoadFromClient( cl );
 	}
 
-	public override void Spawn()
-	{
-		MainCamera = new FirstPersonCamera();
-		LastCamera = MainCamera;
-
-		base.Spawn();
-	}
-
 	public override void Respawn()
 	{
 		SetModel( "models/citizen/citizen.vmdl" );
 
 		Controller = new WalkController();
 		Animator = new StandardPlayerAnimator();
-
-		MainCamera = LastCamera;
-		Camera = MainCamera;
 
 		if ( DevController is NoclipController )
 		{
@@ -75,6 +59,8 @@ partial class SandboxPlayer : Player
 		Inventory.Add( new Flashlight() );
 		Inventory.Add( new Fists() );
 
+		CameraMode = new FirstPersonCamera();
+
 		base.Respawn();
 	}
 
@@ -91,17 +77,19 @@ partial class SandboxPlayer : Player
 
 		VehicleController = null;
 		VehicleAnimator = null;
-		VehicleCamera = null;
 		Vehicle = null;
 
 		BecomeRagdollOnClient( Velocity, lastDamage.Flags, lastDamage.Position, lastDamage.Force, GetHitboxBone( lastDamage.HitboxIndex ) );
-		LastCamera = MainCamera;
-		MainCamera = new SpectateRagdollCamera();
-		Camera = MainCamera;
+
 		Controller = null;
 
 		EnableAllCollisions = false;
 		EnableDrawing = false;
+
+		foreach ( var child in Children )
+		{
+			child.EnableDrawing = false;
+		}
 
 		Inventory.DropActive();
 		Inventory.DeleteContents();
@@ -141,13 +129,6 @@ partial class SandboxPlayer : Player
 		return base.GetActiveAnimator();
 	}
 
-	public ICamera GetActiveCamera()
-	{
-		if ( VehicleCamera != null ) return VehicleCamera;
-
-		return MainCamera;
-	}
-
 	public override void Simulate( Client cl )
 	{
 		base.Simulate( cl );
@@ -174,17 +155,15 @@ partial class SandboxPlayer : Player
 
 		if ( Input.Pressed( InputButton.View ) )
 		{
-			if ( MainCamera is not FirstPersonCamera )
+			if ( CameraMode is ThirdPersonCamera )
 			{
-				MainCamera = new FirstPersonCamera();
+				CameraMode = new FirstPersonCamera();
 			}
 			else
 			{
-				MainCamera = new ThirdPersonCamera();
+				CameraMode = new ThirdPersonCamera();
 			}
 		}
-
-		Camera = GetActiveCamera();
 
 		if ( Input.Pressed( InputButton.Drop ) )
 		{
@@ -224,7 +203,7 @@ partial class SandboxPlayer : Player
 	[ServerCmd( "inventory_current" )]
 	public static void SetInventoryCurrent( string entName )
 	{
-		var target = ConsoleSystem.Caller.Pawn;
+		var target = ConsoleSystem.Caller.Pawn as Player;
 		if ( target == null ) return;
 
 		var inventory = target.Inventory;

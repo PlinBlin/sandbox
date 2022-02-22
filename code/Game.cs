@@ -49,7 +49,7 @@ partial class SandboxGame : Game
 	[ServerCmd( "spawn_entity" )]
 	public static void SpawnEntity( string entName )
 	{
-		var owner = ConsoleSystem.Caller.Pawn;
+		var owner = ConsoleSystem.Caller.Pawn as Player;
 
 		if ( owner == null )
 			return;
