@@ -43,7 +43,7 @@ partial class Fists : Weapon
 	public override void SimulateAnimator( PawnAnimator anim )
 	{
 		anim.SetAnimParameter( "holdtype", 5 );
-		anim.SetAnimParameter( "aimat_weight", 1.0f );
+		anim.SetAnimParameter( "aim_body_weight", 1.0f );
 	}
 
 	public override void CreateViewModel()
