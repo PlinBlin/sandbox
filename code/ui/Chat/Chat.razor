@@ -1,4 +1,8 @@
 @using Sandbox.UI;
+@using Sandbox;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
 
 @namespace Sandbox
 
@@ -73,8 +77,7 @@
 		var msg = Input.Text.Trim();
 		Input.Text = "";
 
-		if ( string.IsNullOrWhiteSpace( msg ) )
-			return;
+		if ( string.IsNullOrWhiteSpace( msg ) ) return;
 
 		Say( msg );
 	}
@@ -83,7 +86,7 @@
 	{
 		var e = Canvas.AddChild<ChatRow>();
 
-		var player = Local.Pawn;
+		var player = Game.LocalPawn;
 		if ( !player.IsValid() ) return;
 
 		if ( playerId > 0 )
@@ -96,9 +99,9 @@
 		e.SetClass( "info", isInfo );
 		e.BindClass( "stale", () => e.Lifetime > MessageLifetime );
 
-		var cl = Client.All.FirstOrDefault( x => x.PlayerId == playerId );
+		var cl = Game.Clients.FirstOrDefault( x => x.SteamId == playerId );
 		if ( cl.IsValid() )
-			e.SetClass( "friend", cl.IsFriend || Local.PlayerId == playerId );
+			e.SetClass( "friend", cl.IsFriend || Game.SteamId == playerId );
 
 		Canvas.TryScrollToBottom();
 
