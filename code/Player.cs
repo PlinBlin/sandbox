@@ -1,5 +1,4 @@
 ﻿using Sandbox;
-using System.Numerics;
 
 partial class SandboxPlayer : Player
 {
@@ -115,6 +114,12 @@ partial class SandboxPlayer : Player
 		return base.GetActiveController();
 	}
 
+	[Event.Client.BuildInput]
+	public void Frame()
+	{
+		DebugOverlay.ScreenText( $"Frame - Suicide Key: {Input.Down( "Suicide" )}", 1 );
+	}
+
 	public override void Simulate( IClient cl )
 	{
 		base.Simulate( cl );
@@ -147,6 +152,16 @@ partial class SandboxPlayer : Player
 				dropped.PhysicsGroup.ApplyAngularImpulse( Vector3.Random * 100.0f, true );
 
 				timeSinceDropped = 0;
+			}
+		}
+
+		DebugOverlay.ScreenText( $"Simulate - Suicide Key: {Input.Down( "Suicide" )}", 5 );
+
+		if ( Input.Pressed( "Suicide" ) )
+		{
+			if ( Game.IsServer )
+			{
+				TakeDamage( DamageInfo.Generic( 9999f ) );
 			}
 		}
 
