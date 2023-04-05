@@ -72,6 +72,9 @@ public class InventoryBar : Panel
 		if ( Input.Pressed( InputButton.Slot8 ) ) SetActiveSlot( inventory, 7 );
 		if ( Input.Pressed( InputButton.Slot9 ) ) SetActiveSlot( inventory, 8 );
 
+		if ( Input.Pressed( InputButton.SlotPrev ) ) { Log.Info( "SlotPrev" ); SwitchActiveSlot( inventory, -1 ); }
+		if ( Input.Pressed( InputButton.SlotNext ) ) SwitchActiveSlot( inventory, 1 );
+
 		if ( Input.MouseWheel != 0 ) SwitchActiveSlot( inventory, -Input.MouseWheel );
 	}
 
