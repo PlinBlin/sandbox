@@ -51,7 +51,7 @@
     // @ref
     public Image Glyph { get; set; }
     public GlyphStyle GlyphStyle { get; set; } = GlyphStyle.Light;
-    public string Action => "Suicide";
+    public string Action { get; set; } = "Suicide";
 
     /// <summary>
     /// Checks the current button and updates the glyph.
