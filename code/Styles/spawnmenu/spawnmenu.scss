@@ -4,10 +4,10 @@
 @import "_packagelist.scss";
 
 spawnmenu {
-	left: 0px;
-	right: 0px;
-	top: 0px;
-	bottom: 0px;
+	left: 75px;
+	right: 75px;
+	top: 75px;
+	bottom: 75px;
 	padding: 80px 100px;
 	padding-bottom: 200px;
 	pointer-events: none;
@@ -16,7 +16,7 @@ spawnmenu {
 	font-family: poppins;
 	opacity: 0;
 	z-index: 10;
-	backdrop-filter: blur( 10px ) contrast( 50% ) saturate( 50% ) brightness( 10% );
+	backdrop-filter: blur( 50px ) contrast( 50% ) saturate( 50% ) brightness( 10% );
 
 	.left {
 		flex-grow: 1;
